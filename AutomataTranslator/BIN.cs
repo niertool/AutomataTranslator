@@ -10,7 +10,7 @@ namespace AutomataTranslator {
         byte[] Script;
         int StringStartPos;
         int StringEndPos;
-        public int StringTableLength => StringEndPos - StringStartPos;
+        public int StringTableLength { get { return StringEndPos - StringStartPos; } }
         RiteHdr Hdr;
         public bool AssertLength = true;
         public MRubyStringEditor(byte[] Script) {
@@ -36,24 +36,20 @@ namespace AutomataTranslator {
             StringStartPos = (Hdr.Unk2DataLength * 4) + 0x84 + 0x08;//0x84 = Relative Offset; 0x8 = ??
             Reader.BaseStream.Position = StringStartPos;
             List<string> Strings = new List<string>();
-            long LastStr = 0;
             while (true) {
-                LastStr = Reader.BaseStream.Position + 3;
                 string String = ReadString(Reader.BaseStream);
-                if (String == string.Empty || String.Contains("_") || String.Contains("\x0")) {
+                if (String == string.Empty || String.Contains("_")) {
                     long Pos = Reader.BaseStream.Position;
                     bool Result = false;
                     try {
                         string tmp = ReadString(Reader.BaseStream);
-                        if (!(tmp == string.Empty || tmp.Contains("_") || String.Contains("\x0")))
+                        if (!(tmp == string.Empty || tmp.Contains("_")))
                             Result = true;
                     }
                     catch { }
                     Reader.BaseStream.Position = Pos;
-                    if (!Result) {
-                        Reader.BaseStream.Position = LastStr;
+                    if (!Result)
                         break;
-                    }
                 }
                 Strings.Add(String);
             }
