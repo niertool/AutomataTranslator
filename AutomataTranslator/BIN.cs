@@ -34,9 +34,17 @@ namespace AutomataTranslator {
            // if (Hdr.Checksum != CRC(Script))
            //     throw new Exception("Corrupted Script");
             StringStartPos = (Hdr.Unk2DataLength * 4) + 0x84 + 0x08;//0x84 = Relative Offset; 0x8 = ??
-            Reader.BaseStream.Position = StringStartPos;
+            Reader.BaseStream.Position = StringStartPos - 4;
+            byte[] CountBuff = new byte[4];
+            Reader.Read(CountBuff, 0, CountBuff.Length);
+            Array.Reverse(CountBuff, 0, CountBuff.Length);
+            byte[] dwd = new byte[4];
+            CountBuff.CopyTo(dwd, 0);
+            int Count = BitConverter.ToInt32(dwd, 0);
             List<string> Strings = new List<string>();
+            int nCount = 0;
             while (true) {
+                nCount++;
                 //Get Length
                 byte[] LenBuff = new byte[3];
                 Reader.Read(LenBuff, 0, LenBuff.Length);
@@ -44,8 +52,7 @@ namespace AutomataTranslator {
                 byte[] dw = new byte[4];
                 LenBuff.CopyTo(dw, 0);
                 int Len = BitConverter.ToInt32(dw, 0);
-                if (Len == 0)
-                    break;
+                if (nCount > Count) break;
                 //Get Content
                 byte[] Buffer = new byte[Len];
                 Reader.Read(Buffer, 0, Buffer.Length);
