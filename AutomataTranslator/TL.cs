@@ -108,7 +108,7 @@ namespace AutomataTranslator {
 
         public byte[] Export(string[] Strings) {
             if (RemoveLangs && ReplacesTargets.Count == 0) {
-                ReplacesTargets.Add(Language.KO);
+                ReplacesTargets.Add(Language.FR);
             }
             string[] NewStrs = new string[Strs.Length];
             Strs.CopyTo(NewStrs, 0);
@@ -119,7 +119,7 @@ namespace AutomataTranslator {
                 for (int i = 0; i < Strs.Length - 5; i++) {
                     if (NewStrs[i].Contains("_") || NewStrs[i].Contains("@") || NewStrs[i].Contains("#"))
                         continue;
-                    if ((LanguageMap[i] != Language.JP && LanguageMap[i] != Language.CH && LanguageMap[i] != Language.KO && NewStrs[i].ToUpper() == NewStrs[i]) || TargetLang == LanguageMap[i])
+                    if ((LanguageMap[i] != Language.GE && LanguageMap[i] != Language.FR && NewStrs[i].ToUpper() == NewStrs[i]) || TargetLang == LanguageMap[i])
                         continue;
                     else {
                         while (SpaceRequired++ < 0)
@@ -132,7 +132,7 @@ namespace AutomataTranslator {
             SpaceRequired = Editor.CalculateLength(NewStrs) - Editor.StringTableLength;
             for (int i = 0; i < Strs.Length - 5 && RemoveLangs && SpaceRequired > 0; i++)
                 if (ReplacesTargets.Contains(LanguageMap[i]) && LanguageMap[i] != TargetLang) {
-                    if (NewStrs[i].Contains("_") || NewStrs[i].Contains("@") || NewStrs[i].Contains("#") || (LanguageMap[i] != Language.JP && LanguageMap[i] != Language.CH && LanguageMap[i] != Language.KO && NewStrs[i].ToUpper() == NewStrs[i]))
+                    if (NewStrs[i].Contains("_") || NewStrs[i].Contains("@") || NewStrs[i].Contains("#") || (LanguageMap[i] != Language.GE && LanguageMap[i] != Language.FR && NewStrs[i].ToUpper() == NewStrs[i]))
                         continue;//ignore if is a system script...
                     SpaceRequired -= Encoding.UTF8.GetByteCount(NewStrs[i]) - 1;
                     NewStrs[i] = " ";
